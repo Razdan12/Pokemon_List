@@ -59,15 +59,7 @@ const Navbar: FC<props> = ({ children }) => {
             aria-label="close sidebar"
             className="drawer-overlay"
           ></label>
-          <ul className="menu p-4 w-80 min-h-full bg-base-200">
-            {/* Sidebar content here */}
-            <li>
-              <a>Home</a>
-            </li>
-            <li>
-              <a>Detail</a>
-            </li>
-          </ul>
+         
         </div>
       </div>
     </>

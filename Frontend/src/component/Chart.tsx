@@ -3,8 +3,8 @@ import { Chart, ChartConfiguration, ChartItem, registerables } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
 interface DataItem {
-  venue: string;
-  count1: number;
+  item: string | number;
+  count: number;
 }
 
 const ChartSide = ({
@@ -26,11 +26,11 @@ const ChartSide = ({
     const chartConfig: ChartConfiguration = {
       type: tipe,
       data: {
-        labels: data.map((row) => row.venue),
+        labels: data.map((row) => row.item),
         datasets: [
           {
             label: title1,
-            data: data.map((row) => row.count1),
+            data: data.map((row) => row.count),
             fill: true,
           },
         ],

@@ -1,19 +1,47 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import Layout from "../component/Layout";
 import ChartSide from "../component/Chart";
 import Card from "../component/Card";
-
-const data1 = [
-  { venue: "sen", count1: 24 },
-  { venue: "sel", count1: 25 },
-  { venue: "rab", count1: 21 },
-  { venue: "kam", count1: 40 },
-  { venue: "jum", count1: 32 },
-];
+import { RestApi } from "../restApi/Api";
+import { Pokemon } from "../restApi/Type";
+import Modal from "../component/Modal";
 
 const Dasboard = () => {
+  const [generation, setGeneration] = useState<any>([]);
+  const [type, setType] = useState<any>([]);
+  const [score, setHighScore] = useState<any>([]);
+  const [hp, setHp] = useState<any>([]);
+  const [pokemon, setPokemon] = useState<Pokemon[]>();
+
+  const dataChart = async () => {
+    try {
+      const response = await RestApi.GetChart();
+      setGeneration(response.data.gen);
+      setType(response.data.type);
+      setHighScore(response.data.HighScore);
+      setHp(response.data.HighHp);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const dataPokemon = async () => {
+    try {
+      const response = await RestApi.GetPokemon();
+      setPokemon(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    dataChart();
+    dataPokemon();
+  }, []);
+
   return (
     <>
+        <Modal/>
       <Layout>
         <div className="w-full flex justify-center relative">
           <div className="w-full min-h-screen z-1">
@@ -30,7 +58,12 @@ const Dasboard = () => {
                 <div className="backdrop-blur-sm bg-white/10 p-5 rounded-md shadow-md flex flex-col items-center justify-center hover:ring-2 ring-pink-500 ring-inset">
                   <span className="font-bold text-xl">Generation</span>
                   <div className="mt-5">
-                    <ChartSide id="gen" data={data1} title1="gen" tipe="pie" />
+                    <ChartSide
+                      id="gen"
+                      data={generation}
+                      title1="gen"
+                      tipe="pie"
+                    />
                   </div>
                 </div>
               </div>
@@ -40,7 +73,7 @@ const Dasboard = () => {
                   <div className="mt-5">
                     <ChartSide
                       id="type"
-                      data={data1}
+                      data={type}
                       title1="gen"
                       tipe="doughnut"
                     />
@@ -49,11 +82,11 @@ const Dasboard = () => {
               </div>
               <div className="w-full sm:w-1/4 p-2">
                 <div className=" backdrop-blur-sm bg-white/10 p-5 rounded-md shadow-md flex flex-col items-center justify-center hover:ring-2 ring-pink-500 ring-inset">
-                  <span className="font-bold text-xl">Higest Score</span>
+                  <span className="font-bold text-xl">Top 5 Higest Score</span>
                   <div className="mt-5">
                     <ChartSide
                       id="score"
-                      data={data1}
+                      data={score}
                       title1="gen"
                       tipe="polarArea"
                     />
@@ -62,14 +95,9 @@ const Dasboard = () => {
               </div>
               <div className="w-full sm:w-1/4 p-2">
                 <div className=" backdrop-blur-sm bg-white/10 p-5 rounded-md shadow-md flex flex-col items-center justify-center hover:ring-2 ring-pink-500 ring-inse">
-                  <span className="font-bold text-xl">species</span>
+                  <span className="font-bold text-xl">Top 5 High HP</span>
                   <div className="mt-5">
-                    <ChartSide
-                      id="spesies"
-                      data={data1}
-                      title1="gen"
-                      tipe="pie"
-                    />
+                    <ChartSide id="spesies" data={hp} title1="gen" tipe="pie" />
                   </div>
                 </div>
               </div>
@@ -82,26 +110,16 @@ const Dasboard = () => {
               </div>
               <div className="w-full flex  max-h-[380px] overflow-auto ">
                 <div className="w-full flex gap-4 flex-wrap justify-between">
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
+                  {pokemon?.map((item: Pokemon, index: number) => (
+                      <Card
+                        id={item.id}
+                        name={item.name}
+                        img={item.img}
+                        japan={item.nameJapan}
+                        german={item.nameGerman}
+                      />
                   
+                  ))}
                 </div>
               </div>
             </div>
